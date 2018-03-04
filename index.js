@@ -25,9 +25,6 @@ const PlayTogether = TabNavigator({
             style: MCV.tabStyle,
             labelStyle: MCV.tabLabelStyle
         },
-        labelStyle:{
-            fontColor:'black'
-        }
     })
 
 AppRegistry.registerComponent('PlayTogether', () => PlayTogether);

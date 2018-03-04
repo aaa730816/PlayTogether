@@ -14,7 +14,7 @@ let MCV = StyleSheet.create({
     tabStyle: {
         height: totalHeight / 13,
         backgroundColor: 'white',
-        borderColor:'black'
+        borderColor: 'black'
     },
     tabLabelStyle: {
         justifyContent: 'center',
@@ -65,7 +65,7 @@ let MCV = StyleSheet.create({
     },
     dateDistance: {
         width: totalWidth / 6,
-        textAlign:'center',
+        textAlign: 'center',
         fontSize: totalWidth / 30
     },
     dateTime: {
@@ -81,19 +81,43 @@ let MCV = StyleSheet.create({
         height: 1,
         backgroundColor: '#e0e0e0'
     },
-    dateDetailContainer:{
-        flex:1,
-        width:totalWidth,
-        justifyContent:'center',
-        alignItems:'center'
+    dateDetailContainer: {
+        flex: 1,
+        width: totalWidth,
+        justifyContent: 'center',
+        alignItems: 'center'
     },
-    dateDetailView:{
-        paddingHorizontal:20,
-        paddingVertical:10,
-        width:totalWidth-40,
-        height:totalHeight-50-20-(totalHeight*2)/13-50,
-        elevation:25,
-        backgroundColor:'white'
+    dateDetailView: {
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        width: totalWidth - 40,
+        height: totalHeight - 50 - 20 - (totalHeight * 2) / 13 - 50,
+        elevation: 25,
+        backgroundColor: 'white',
+        alignItems:'flex-end'
+    },
+    sportInputView: {
+        flex:1,
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        paddingHorizontal: 20,
+        width: totalWidth - 40 - 40,
+        alignItems: 'center'
+    },
+    textInputView: {
+        // justifyContent:'flex-end',
+        width: (totalWidth - 40) * 0.6
+    },
+    textInputStyle: {
+        height: 40,
+        textAlign:'right'
+    },
+    dateTextStyle:{
+        height: 40,
+        textAlign:'center'
+    },
+    labelStyle: { 
+        width: 80 
     }
 })
 export { MCV as default }

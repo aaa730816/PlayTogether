@@ -114,10 +114,24 @@ let MCV = StyleSheet.create({
     },
     dateTextStyle:{
         height: 40,
+        flex:1,
         textAlign:'center'
     },
     labelStyle: { 
         width: 80 
+    },
+    textAreaView:{
+        width: totalWidth - 40 - 40-20,
+        height:150,
+        borderWidth:1,
+        marginVertical:10,
+        borderRadius:5,
+        borderColor:'#bdbdbd'
+    },
+    textArea:{
+        marginTop:0,
+        // height:150,
+        width:totalWidth - 40 - 40-20,
     }
 })
 export { MCV as default }

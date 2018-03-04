@@ -4,22 +4,32 @@ import MCV from '../../MCV';
 import Icon from 'react-native-vector-icons/Ionicons';
 import IconFA from 'react-native-vector-icons/FontAwesome';
 import CommonString from '../../resource/CommonString';
+import DateTimePicker from 'react-native-modal-datetime-picker';
 export default class Sport extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            needBringEquipmentChecked: false,
-            startTime: new Date().toLocaleDateString(),
-            hourPickerItems:[]
+            hourPickerItems: [],
+            isDateTimePickerVisible: false,
+            dateInfo: {
+                title: '',
+                startTime: new Date(),
+                location: '',
+                cost: '',
+                needBringEquipment: false,
+                numOfPeople: '',
+                description: ''
+            }
         }
     }
     componentDidMount() {
         var hourPickerItems = [];
         for (let i = 0; i <= 23; i++) {
-            hourPickerItems.push((<Picker.Item label={i} value={i} />))
+            let display = i.toString();
+            hourPickerItems.push((<Picker.Item key={i} label={display} value={display} />))
         }
         this.setState({
-            hourPickerItems:hourPickerItems
+            hourPickerItems: hourPickerItems
         })
     }
     static navigationOptions = ({ navigation }) => ({
@@ -32,21 +42,25 @@ export default class Sport extends Component {
     })
     handleClick = () => {
         this.setState((state) => {
+            let info = state.dateInfo;
+            info.needBringEquipment = info.needBringEquipment ? false : true;
             return {
-                needBringEquipmentChecked: state.needBringEquipmentChecked ? false : true
+                dateInfo: info
             }
         })
     }
-    async openDatePicker() {
-        const { action, year, month, day } = await DatePickerAndroid.open({
-            date: new Date()
+    _showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true });
+
+    _hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
+
+    _handleDatePicked = (date) => {
+        let info = this.state.dateInfo;
+        info.startTime = date;
+        this.setState({
+            dateInfo: info
         })
-        if (action !== DatePickerAndroid.dismissedAction) {
-            this.setState({
-                startTime: new Date(year, month, day).toLocaleDateString()
-            })
-        }
-    }
+        this._hideDateTimePicker();
+    };
     render() {
         let { params } = this.props.navigation.state;
         let item = params.item;
@@ -64,12 +78,16 @@ export default class Sport extends Component {
                         <View style={MCV.sportInputView}>
                             <View style={MCV.labelStyle}><Text>{CommonString.startTime + CommonString.semicolon}</Text></View>
                             <View style={MCV.textInputView}>
-                                <TouchableOpacity onPress={() => this.openDatePicker()}>
-                                    <TextInput style={MCV.dateTextStyle} editable={false} underlineColorAndroid='#bdbdbd'>{this.state.startTime}</TextInput>
+                                <TouchableOpacity onPress={() => this._showDateTimePicker()}>
+                                    <TextInput style={MCV.dateTextStyle} editable={false} underlineColorAndroid='#bdbdbd'>{this.state.dateInfo.startTime.toLocaleString()}</TextInput>
                                 </TouchableOpacity>
-                                <Picker>
-                                    {this.state.hourPickerItems}
-                                </Picker>
+                                <DateTimePicker
+                                    mode='datetime'
+                                    date={this.state.dateInfo.startTime}
+                                    isVisible={this.state.isDateTimePickerVisible}
+                                    onConfirm={this._handleDatePicked}
+                                    onCancel={this._hideDateTimePicker}
+                                />
                             </View>
                         </View>
                         <View style={MCV.sportInputView}>
@@ -86,11 +104,11 @@ export default class Sport extends Component {
                         </View>
                         <View style={MCV.sportInputView}>
                             <View style={MCV.labelStyle}><Text>{CommonString.needBringEquipment + CommonString.semicolon}</Text></View>
-                            <View style={MCV.textInputView}><CheckBox style={{ alignSelf: 'flex-end' }} onValueChange={this.handleClick} value={this.state.needBringEquipmentChecked}></CheckBox></View>
+                            <View style={MCV.textInputView}><CheckBox style={{ alignSelf: 'flex-end' }} onValueChange={this.handleClick} value={this.state.dateInfo.needBringEquipment}></CheckBox></View>
                         </View>
-                        <View style={MCV.sportInputView}>
+                        <View style={[MCV.sportInputView, { flexDirection: 'column', alignItems: 'flex-start', paddingHorizontal: 10, paddingVertical: 10 }]}>
                             <View style={MCV.labelStyle}><Text>{CommonString.description + CommonString.semicolon}</Text></View>
-                            <View style={MCV.textInputView}><TextInput style={MCV.textInputStyle} underlineColorAndroid='#bdbdbd'></TextInput></View>
+                            <View style={MCV.textAreaView}><TextInput style={MCV.textArea} multiline={true} placeholder={CommonString.descriptionPlaceHolder} underlineColorAndroid='transparent'></TextInput></View>
                         </View>
                     </ScrollView>
                 </View>

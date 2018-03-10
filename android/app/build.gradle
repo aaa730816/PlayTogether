@@ -110,6 +110,9 @@ android {
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
+        manifestPlaceholders = [
+            QQ_APPID: "1106693501"
+        ]
     }
     signingConfigs {
         release {
@@ -150,6 +153,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-qq')
     compile project(':react-native-baidu-map')
     compile project(':react-native-vector-icons')
     compile fileTree(dir: "libs", include: ["*.jar"])

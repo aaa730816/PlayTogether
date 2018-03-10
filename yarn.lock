@@ -3670,6 +3670,10 @@ react-native-modal@3.1.0:
     prop-types "15.5.10"
     react-native-animatable "^1.2.3"
 
+react-native-qq@^2.0.5:
+  version "2.0.5"
+  resolved "http://registry.npm.taobao.org/react-native-qq/download/react-native-qq-2.0.5.tgz#91c893bd9dd4be7b7953227e522c9d8bb3982624"
+
 react-native-safe-area-view@^0.7.0:
   version "0.7.0"
   resolved "http://registry.npm.taobao.org/react-native-safe-area-view/download/react-native-safe-area-view-0.7.0.tgz#38f5ab9368d6ef9e5d18ab64212938af3ec39421"

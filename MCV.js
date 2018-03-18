@@ -16,6 +16,19 @@ let MCV = StyleSheet.create({
         backgroundColor: 'white',
         borderColor: 'black'
     },
+    userHeaderStyle: {
+        backgroundColor: colors.MaterialRed,
+        height: totalHeight / 4,
+        elevation: 0
+    },
+    userTabStyle: {
+        backgroundColor: colors.MaterialRed
+    },
+    userTabLabelStyle: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        color: 'white'
+    },
     tabLabelStyle: {
         justifyContent: 'center',
         alignItems: 'center',
@@ -94,10 +107,10 @@ let MCV = StyleSheet.create({
         height: totalHeight - 50 - 20 - (totalHeight * 2) / 13 - 50,
         elevation: 25,
         backgroundColor: 'white',
-        alignItems:'flex-end'
+        alignItems: 'flex-end'
     },
     sportInputView: {
-        flex:1,
+        flex: 1,
         flexDirection: 'row',
         justifyContent: 'flex-end',
         paddingHorizontal: 20,
@@ -110,28 +123,28 @@ let MCV = StyleSheet.create({
     },
     textInputStyle: {
         height: 40,
-        textAlign:'right'
+        textAlign: 'right'
     },
-    dateTextStyle:{
+    dateTextStyle: {
         height: 40,
-        flex:1,
-        textAlign:'center'
+        flex: 1,
+        textAlign: 'center'
     },
-    labelStyle: { 
-        width: 80 
+    labelStyle: {
+        width: 80
     },
-    textAreaView:{
-        width: totalWidth - 40 - 40-20,
-        height:150,
-        borderWidth:1,
-        marginVertical:10,
-        borderRadius:5,
-        borderColor:'#bdbdbd'
+    textAreaView: {
+        width: totalWidth - 40 - 40 - 20,
+        height: 150,
+        borderWidth: 1,
+        marginVertical: 10,
+        borderRadius: 5,
+        borderColor: '#bdbdbd'
     },
-    textArea:{
-        marginTop:0,
+    textArea: {
+        marginTop: 0,
         // height:150,
-        width:totalWidth - 40 - 40-20,
+        width: totalWidth - 40 - 40 - 20,
     }
 })
 export { MCV as default }

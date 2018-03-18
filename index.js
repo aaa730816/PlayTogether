@@ -1,23 +1,23 @@
-import { AppRegistry } from 'react-native';
+import { AppRegistry,View,Text } from 'react-native';
 import React, { Component } from 'react';
 import { StackNavigator, TabNavigator } from 'react-navigation';
 import MainPage from './views/MainPage';
 import DateList from './views/DateList';
 import Sport from './views/datedetails/Sport';
 import SiteView from './views/utils/SiteView';
-import Login from './views/Login';
+import User from './views/users/User';
 import MCV from './MCV';
 const PlayTogetherStack = StackNavigator({
-    Main: { screen: Login },
+    Main: { screen: MainPage },
     DateList: { screen: DateList },
     Sport: { screen: Sport },
-    SiteView: { screen: SiteView },
-    Login:{ screen : Login}
+    SiteView: { screen: SiteView }
 }, {
         headerMode: 'float'
-    })
+    });
 const PlayTogether = TabNavigator({
-    Home: { screen: PlayTogetherStack }
+    Home: { screen: PlayTogetherStack },
+    Users: { screen: User }
 }, {
         tabBarPosition: 'bottom',
         swipeEnabled: true,
@@ -28,5 +28,4 @@ const PlayTogether = TabNavigator({
             labelStyle: MCV.tabLabelStyle
         },
     })
-
 AppRegistry.registerComponent('PlayTogether', () => PlayTogether);

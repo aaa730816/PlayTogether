@@ -97,7 +97,7 @@ const sections = [
 ]
 export default class MainPage extends Component {
     static navigationOptions = {
-        title: '首页',
+        title: CommonString.MainPage,
         headerStyle: MCV.headerStyle,
         headerTintColor: 'white',
         headerTitleStyle: MCV.headerTitleStyle,

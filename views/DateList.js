@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import MCV from '../MCV';
 export default class DateList extends Component {
     static navigationOptions = ({ navigation }) => ({
-        title: '活动列表',
+        title: CommonString.DateListTitle,
         headerStyle: MCV.headerStyle,
         headerTintColor: 'white',
         headerRight: (<TouchableOpacity onPress={() => navigation.state.params.addPress()}><View><Icon name={'md-add'} size={25} style={{ color: 'white', marginRight: 20 }}></Icon></View></TouchableOpacity>),

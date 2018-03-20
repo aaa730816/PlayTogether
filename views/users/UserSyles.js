@@ -25,7 +25,8 @@ let UserStyles = StyleSheet.create({
     loginInputContainer: {
         width: (totalWidth * 2) / 3,
         height:200,
-        justifyContent:'space-around'
+        justifyContent:'space-around',
+        marginTop:totalHeight / 8
     },
     userNameView: {
         flexDirection: 'row',

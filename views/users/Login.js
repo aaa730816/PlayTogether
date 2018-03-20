@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, TouchableHighlight, Image, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, TouchableHighlight, Image, TextInput,ScrollView } from 'react-native';
 import * as QQAPI from 'react-native-qq';
 import CommonString from '../../resource/CommonString';
 import UserStyles from './UserSyles';
@@ -17,6 +17,7 @@ export default class Login extends Component {
     }
     render() {
         return (
+            <ScrollView>
             <View style={UserStyles.loginContainer}>
                 <View style={UserStyles.loginInputContainer}>
                     <View style={UserStyles.userNameView}>
@@ -35,6 +36,7 @@ export default class Login extends Component {
                     </TouchableOpacity>
                 </View>
             </View>
+            </ScrollView>
         )
     }
     qqLogin = () => {

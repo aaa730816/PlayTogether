@@ -1,6 +1,7 @@
 import React from 'react';
-import { StyleSheet, Dimensions } from 'react-native';
+import {StyleSheet, Dimensions} from 'react-native';
 import colors from './Colors';
+
 let totalHeight = Dimensions.get('window').height;
 let totalWidth = Dimensions.get('window').width;
 let MCV = StyleSheet.create({
@@ -123,7 +124,7 @@ let MCV = StyleSheet.create({
     },
     textInputStyle: {
         height: 40,
-        textAlign: 'right'
+        textAlign: 'center'
     },
     dateTextStyle: {
         height: 40,
@@ -145,6 +146,60 @@ let MCV = StyleSheet.create({
         marginTop: 0,
         // height:150,
         width: totalWidth - 40 - 40 - 20,
+    },
+    locationSearchView: {
+        backgroundColor: 'white',
+        height: 100,
+        width: totalWidth-10,
+        position: 'absolute',
+        top:5,
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignSelf:'center',
+        elevation: 30
+    },
+    locationSearchField:{
+        height: 50,
+        width: totalWidth-10,
+        borderTopWidth:1,
+        borderTopColor:'#bdbdbd',
+    },
+    mapViewStyle: {
+        width: totalWidth,
+        height: totalHeight * 10.55 / 13
+    },
+    locationSearchContainer: {
+        flex: 1,
+        width: totalWidth,
+        backgroundColor: 'white'
+    },
+    locationSearchTextField: {
+        width: totalWidth,
+        height: 50,
+        borderBottomWidth: 1,
+        borderBottomColor: '#bdbdbd',
+        elevation: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    locationListView: {
+        flex: 1,
+        width: totalWidth,
+        marginTop: 5
+    },
+    locationSearchItem: {
+        width: totalWidth,
+        height: 50,
+        justifyContent: 'center'
+    },
+    doLocationSearchBtn: {
+        borderLeftWidth: 1,
+        borderLeftColor:'#bdbdbd',
+        height:50,
+        width:50,
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 })
-export { MCV as default }
+export {MCV as default}

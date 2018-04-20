@@ -1,22 +1,31 @@
-import React, { Component } from 'react';
-import { View, FlatList, Text, TouchableOpacity } from 'react-native';
+import React, {Component} from 'react';
+import {View, FlatList, Text, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import CommonString from '../resource/CommonString';
 import MCV from '../MCV';
+
 export default class DateList extends Component {
-    static navigationOptions = ({ navigation }) => ({
+    static navigationOptions = ({navigation}) => ({
         title: CommonString.DateListTitle,
         headerStyle: MCV.headerStyle,
         headerTintColor: 'white',
-        headerRight: (<TouchableOpacity onPress={() => navigation.state.params.addPress()}><View><Icon name={'md-add'} size={25} style={{ color: 'white', marginRight: 20 }}></Icon></View></TouchableOpacity>),
+        headerRight: (
+            <TouchableOpacity onPress={() => navigation.state.params.addPress()}><View><Icon name={'md-add'} size={25}
+                                                                                             style={{
+                                                                                                 color: 'white',
+                                                                                                 marginRight: 20
+                                                                                             }}></Icon></View></TouchableOpacity>),
         headerTitleStyle: MCV.headerTitleStyle,
         tabBarLabel: navigation.state.params.item.tabName
     })
+
     constructor(props) {
         super(props);
         this.state = {
             data: []
         }
     }
+
     componentDidMount() {
         this.setState((state) => {
             return {
@@ -55,19 +64,21 @@ export default class DateList extends Component {
                 ]
             }
         })
-        this.props.navigation.setParams({ addPress: this.createDate })
+        this.props.navigation.setParams({addPress: this.createDate})
     }
+
     createDate = () => {
-        let { params } = this.props.navigation.state;
+        let {params} = this.props.navigation.state;
         this.props.navigation.navigate(params.item.component, {
             operation: 'new',
-            item:params.item
+            item: params.item
         })
     }
-    onRenderItem = ({ item }) => {
+    onRenderItem = ({item}) => {
         return (
             <View style={MCV.dateContainer}>
-                <View style={MCV.dateFirstRow}><Text style={MCV.dateTitle}>{item.title}</Text><Text style={MCV.dateDistance}>{item.distance}</Text></View>
+                <View style={MCV.dateFirstRow}><Text style={MCV.dateTitle}>{item.title}</Text><Text
+                    style={MCV.dateDistance}>{item.distance}</Text></View>
                 <Text style={MCV.dateTime}>时间:{item.time}</Text>
                 <Text style={MCV.dateSite}>描述:{item.site}</Text>
             </View>
@@ -77,10 +88,12 @@ export default class DateList extends Component {
     separator = () => {
         return (<View style={MCV.separator}></View>);
     }
+
     render() {
         return (
             <View style={MCV.dateListContainer}>
-                <FlatList ItemSeparatorComponent={this.separator} data={this.state.data} renderItem={this.onRenderItem} keyExtractor={this.onKeyExtractor} />
+                <FlatList ItemSeparatorComponent={this.separator} data={this.state.data} renderItem={this.onRenderItem}
+                          keyExtractor={this.onKeyExtractor}/>
             </View>
         )
     }

@@ -12,9 +12,14 @@ export default class Sport extends Component {
             hourPickerItems: [],
             isDateTimePickerVisible: false,
             dateInfo: {
-                title: '',
+                title: this.props.navigation.state.params.title,
                 startTime: new Date(),
-                location: '',
+                location: {
+                    longitude: 121.39903166666659,
+                    latitude: 31.32143821296778,
+                    address: '',
+                    name: ''
+                },
                 cost: '',
                 needBringEquipment: false,
                 numOfPeople: '',
@@ -60,7 +65,21 @@ export default class Sport extends Component {
             dateInfo: info
         })
         this._hideDateTimePicker();
-    };
+    }
+    _openGeoSelect=()=>{
+        var _this=this;
+        this.props.navigation.navigate('SiteView',{
+            setLocation:_this._setLocation,
+            location:_this.state.dateInfo.location
+        });
+    }
+    _setLocation=(location)=>{
+        this.setState((previous)=>{
+            previous.dateInfo.location = location;
+            return previous;
+        })
+    }
+
     render() {
         let { params } = this.props.navigation.state;
         let item = params.item;
@@ -92,7 +111,8 @@ export default class Sport extends Component {
                         </View>
                         <View style={MCV.sportInputView}>
                             <View style={MCV.labelStyle}><Text>{CommonString.location + CommonString.semicolon}</Text></View>
-                            <View style={MCV.textInputView}><TextInput style={MCV.textInputStyle} underlineColorAndroid='#bdbdbd'></TextInput></View>
+                            <TouchableOpacity onPress={()=>this._openGeoSelect()}><View style={MCV.textInputView}><TextInput editable={false} style={MCV.textInputStyle}
+                                                                                                                             value={this.state.dateInfo.location.address} underlineColorAndroid='#bdbdbd'></TextInput></View></TouchableOpacity>
                         </View>
                         <View style={MCV.sportInputView}>
                             <View style={MCV.labelStyle}><Text>{CommonString.cost + CommonString.semicolon}</Text></View>

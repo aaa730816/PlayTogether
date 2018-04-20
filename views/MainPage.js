@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-    View, Text, Image, StyleSheet, StatusBar, TouchableOpacity, ScrollView
+    View, Text, Image, StyleSheet, StatusBar, TouchableOpacity, ScrollView,AsyncStorage
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import IconFA from 'react-native-vector-icons/FontAwesome';
@@ -98,10 +98,21 @@ const sections = [
 export default class MainPage extends Component {
     static navigationOptions = {
         title: CommonString.MainPage,
-        headerStyle: MCV.headerStyle,
-        headerTintColor: 'white',
-        headerTitleStyle: MCV.headerTitleStyle,
+        // headerStyle: MCV.headerStyle,
+        // headerTintColor: 'white',
+        // headerTitleStyle: MCV.headerTitleStyle,
         tabBarLabel: CommonString.DateTabName
+    }
+
+    componentDidMount() {
+        AsyncStorage.getItem('user').then(value => {
+            if (value!=''&&value!=undefined) {
+                var user = JSON.parse(value);
+                global.userId = user.userId
+                global.userName = user.userName.length > 15 ? user.userName.slice(0, 15) + '...' : user.userName
+                global.nickName = user.nickName
+            }
+        })
     }
     render() {
         let boxs = sections.map((item, index) => {

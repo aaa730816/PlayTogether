@@ -13,6 +13,7 @@ let CommonString = {
     descriptionPlaceHolder:'请输入备注...',
     register:'注册',
     login:'登陆',
-    user:'用户'
+    user:'用户',
+    userProfile:'用户资料'
 }
 export {CommonString as default}

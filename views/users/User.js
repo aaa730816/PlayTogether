@@ -5,6 +5,8 @@ import Register from './Register';
 import UserHeader from './UserHeader';
 import CommonString from '../../resource/CommonString';
 import UserProfile from './UserProfile';
+import UserActivity from './UserActivity';
+import Activity from '../datedetails/Activity';
 import MCV from '../../MCV';
 
 const UserTab = TabNavigator({
@@ -18,12 +20,9 @@ const UserTab = TabNavigator({
 });
 const UserStack = StackNavigator({
     Users: {screen: UserTab},
-    UserProfile: {screen: UserProfile}
-}, {
-    navigationOptions: {
-        headerStyle: MCV.userHeaderStyle,
-        header: (<UserHeader></UserHeader>)
-    }
+    UserProfile: {screen: UserProfile},
+    UserActivity: {screen: UserActivity},
+    Activity:{screen:Activity}
 });
 export default class User extends Component {
     static navigationOptions = {

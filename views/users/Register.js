@@ -14,10 +14,14 @@ import CommonString from '../../resource/CommonString';
 import UserStyles from './UserSyles';
 import IconFA from 'react-native-vector-icons/FontAwesome';
 import colors from '../../Colors';
+import UserHeader from './UserHeader';
+import MCV from "../../MCV";
 
 export default class Resgister extends Component {
     static navigationOptions = {
-        title: CommonString.register
+        title: CommonString.register,
+        headerStyle: MCV.userHeaderStyle,
+        header: (<UserHeader/>)
     }
 
     constructor(props) {
@@ -102,23 +106,23 @@ export default class Resgister extends Component {
                     if (responseJson.success) {
                         AsyncStorage.setItem('user',
                             {
-                                userId:responseJson.userOid,
-                                userName:responseJson.username,
-                                nickName:responseJson.nickName
+                                userId: responseJson.userOid,
+                                userName: responseJson.username,
+                                nickName: responseJson.nickName
                             }, () => {
-                            global.userId = responseJson.userOid
-                            global.userName = responseJson.username.length > 15 ? responseJson.username.slice(0, 15) + '...' : responseJson.username
-                            global.nickName = responseJson.nickName
-                            Alert.alert(
-                                '',
-                                '注册成功',
-                                [
-                                    {
-                                        text: '确认', onPress: () => this.props.navigation.navigate("UserProfile")
-                                    }
-                                ]
-                            )
-                        })
+                                global.userId = responseJson.userOid
+                                global.userName = responseJson.username.length > 15 ? responseJson.username.slice(0, 15) + '...' : responseJson.username
+                                global.nickName = responseJson.nickName
+                                Alert.alert(
+                                    '',
+                                    '注册成功',
+                                    [
+                                        {
+                                            text: '确认', onPress: () => this.props.navigation.navigate("UserProfile")
+                                        }
+                                    ]
+                                )
+                            })
                     }
                 })
         }

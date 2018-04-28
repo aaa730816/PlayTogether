@@ -5,13 +5,17 @@ import {
 } from 'react-native';
 import * as QQAPI from 'react-native-qq';
 import CommonString from '../../resource/CommonString';
+import UserHeader from './UserHeader';
 import UserStyles from './UserSyles';
 import IconFA from 'react-native-vector-icons/FontAwesome';
 import colors from '../../Colors';
+import MCV from "../../MCV";
 
 export default class Login extends Component {
     static navigationOptions = {
-        title: CommonString.login
+        title: CommonString.login,
+        headerStyle: MCV.userHeaderStyle,
+        header:(<UserHeader/>)
     }
 
     constructor(props) {

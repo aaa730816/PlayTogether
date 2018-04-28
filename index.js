@@ -2,27 +2,40 @@ import {AppRegistry, View, Text} from 'react-native';
 import React, {Component} from 'react';
 import {StackNavigator, TabNavigator} from 'react-navigation';
 import MainPage from './views/MainPage';
-import DateList from './views/DateList';
-import Sport from './views/datedetails/Sport';
+import DateList from './views/datedetails/DateList';
+import Activity from './views/datedetails/Activity';
 import SiteView from './views/utils/SiteView';
 import User from './views/users/User';
+import EquipmentList from './views/equipment/EquipmentList';
 import MCV from './MCV';
 import './resource/UrlSetting';
-const PlayTogetherStack = StackNavigator({
+
+const ActivityStack = StackNavigator({
     Main: {screen: MainPage},
     DateList: {screen: DateList},
-    Sport: {screen: Sport},
+    Activity: {screen: Activity},
     SiteView: {screen: SiteView},
 }, {
     headerMode: 'float',
-    navigationOptions:{
+    navigationOptions: {
+        headerStyle: MCV.headerStyle,
+        headerTintColor: 'white',
+        headerTitleStyle: MCV.headerTitleStyle,
+    }
+});
+const EquipmentStack = StackNavigator({
+    EquipmentList: {screen:EquipmentList}
+}, {
+    headerMode: 'float',
+    navigationOptions: {
         headerStyle: MCV.headerStyle,
         headerTintColor: 'white',
         headerTitleStyle: MCV.headerTitleStyle,
     }
 });
 const PlayTogether = TabNavigator({
-    Home: {screen: PlayTogetherStack},
+    Activity: {screen: ActivityStack},
+    Equipment:{screen:EquipmentStack},
     Users: {screen: User}
 }, {
     tabBarPosition: 'bottom',

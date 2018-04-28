@@ -1,21 +1,24 @@
 import React, {Component} from 'react';
-import {View, StyleSheet, TouchableOpacity, TextInput, Modal, FlatList, Text, StatusBar} from 'react-native';
+import {
+    View, StyleSheet, TouchableOpacity, TextInput, Modal, FlatList, Text, StatusBar, Alert,
+    Picker
+} from 'react-native';
 import {
     MapView,
     MapTypes
 } from 'react-native-baidu-map';
 import IconFA from 'react-native-vector-icons/FontAwesome';
 import MCV from '../../MCV';
-import colors from "../../Colors";
+import cityCode from '../utils/CityCode';
 
 var Geolocation = require('Geolocation');
 
 export default class SiteView extends Component {
-    static navigationOptions = ({navigation}) =>({
+    static navigationOptions = ({navigation}) => ({
         title: '位置',
-        headerRight:(
-            <TouchableOpacity onPress={()=>navigation.state.params.selectGeo()}>
-                <Text style={{color:'white',paddingRight:10,fontWeight:'bold'}}>确定</Text>
+        headerRight: (
+            <TouchableOpacity onPress={() => navigation.state.params.selectGeo()}>
+                <Text style={{color: 'white', paddingRight: 20, fontWeight: 'bold'}}>确定</Text>
             </TouchableOpacity>
         )
     })
@@ -51,21 +54,53 @@ export default class SiteView extends Component {
     componentDidMount() {
         this.props.navigation.setParams({selectGeo: this._selectGeo})
         var location = this.props.navigation.state.params.location;
-        if (location.address=='') {
+        if (location.address == '') {
             Geolocation.getCurrentPosition(
                 result => {
                     var location = result.coords;
                     this._baiduMapGeoSearch(location.longitude, location.latitude);
                 })
         } else {
-            this._setMarkAndLocation(location.longitude,location.latitude,location.address,location.name)
+            this._setMarkAndLocation(parseFloat(location.longitude), parseFloat(location.latitude), location.address, location.name)
         }
     }
-    _selectGeo=()=>{
-        this.props.navigation.state.params.setLocation(this.state.location);
-        this.props.navigation.pop()
+
+    _selectGeo = () => {
+        if (this.state.location.address == '') {
+            Alert.alert(
+                '',
+                '必须填写地址',
+                [
+                    {
+                        text: '确认', type: 'cancel'
+                    }
+                ]
+            )
+        } else if (this.state.location.name == '') {
+            Alert.alert(
+                '',
+                '请在地图或搜索框内选择位置',
+                [
+                    {
+                        text: '确认', type: 'cancel'
+                    }
+                ]
+            )
+        }
+        else {
+            this.props.navigation.state.params.setLocation(this.state.location);
+            this.props.navigation.pop()
+        }
     }
+
     render() {
+        let regions = [];
+        for (var k in cityCode){
+            regions.push(
+                <Picker.Item label={cityCode[k]} value={k}/>
+            )
+        }
+
         return (
             <View>
                 <Modal animationType={'slide'} transparent={false} visible={this.state.modalVisiable}
@@ -73,6 +108,10 @@ export default class SiteView extends Component {
                     <View style={MCV.locationSearchContainer}>
                         <StatusBar backgroundColor={'white'}/>
                         <View style={MCV.locationSearchTextField}>
+                            <Picker style={[MCV.doLocationSearchBtn,{width:150}]} selectedValue={this.state.region}
+                                    onValueChange={region => this.setState({region: region})}>
+                                {regions}
+                            </Picker>
                             <TextInput style={{flex: 1}} onChangeText={(text) => this.setState({query: text})}
                                        underlineColorAndroid={'transparent'}></TextInput>
                             <TouchableOpacity onPress={() => this._searchLocation()}>
@@ -92,13 +131,21 @@ export default class SiteView extends Component {
                 <View style={MCV.locationSearchView}>
                     <TouchableOpacity onPress={() => this._onClickSearch()}>
                         {/*<IconFA name='search' size={30}/>*/}
-                        <TextInput style={MCV.locationSearchField} editable={false} value={this.state.location.name}
+                        <TextInput style={[MCV.locationSearchField, {
+                            borderBottomWidth: 1,
+                            borderBottomColor: '#bdbdbd',
+                            borderWidth: this.state.location.name == '' ? 1 : 0,
+                            borderColor: this.state.location.name == '' ? 'red' : 'white'
+                        }]} editable={false} value={this.state.location.name}
                                    onChangeText={(text) => this.setState((previous) => {
                                        previous.location.name = text;
                                        return previous
                                    })} underlineColorAndroid={'transparent'}/>
                     </TouchableOpacity>
-                    <TextInput style={MCV.locationSearchField} value={this.state.location.address}
+                    <TextInput style={[MCV.locationSearchField, {
+                        borderWidth: this.state.location.address == '' ? 1 : 0,
+                        borderColor: this.state.location.address == '' ? 'red' : 'white'
+                    }]} value={this.state.location.address}
                                onChangeText={(text) => this.setState((previous) => {
                                    previous.location.address = text;
                                    return previous;

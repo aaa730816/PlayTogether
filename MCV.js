@@ -70,7 +70,7 @@ let MCV = StyleSheet.create({
         marginHorizontal: 12,
         flexDirection: 'row',
         width: totalWidth - 24,
-        justifyContent: 'space-between'
+        justifyContent: 'space-around'
     },
     dateTitle: {
         fontSize: totalWidth / 20,
@@ -98,6 +98,7 @@ let MCV = StyleSheet.create({
     dateDetailContainer: {
         flex: 1,
         width: totalWidth,
+        height:totalHeight*10.5/13,
         justifyContent: 'center',
         alignItems: 'center'
     },
@@ -105,7 +106,7 @@ let MCV = StyleSheet.create({
         paddingHorizontal: 20,
         paddingVertical: 10,
         width: totalWidth - 40,
-        height: totalHeight - 50 - 20 - (totalHeight * 2) / 13 - 50,
+        height: totalHeight - 50  - (totalHeight * 2) / 13 - 50,
         elevation: 25,
         backgroundColor: 'white',
         alignItems: 'flex-end'
@@ -117,6 +118,10 @@ let MCV = StyleSheet.create({
         paddingHorizontal: 20,
         width: totalWidth - 40 - 40,
         alignItems: 'center'
+    },
+    gamePicker:{
+        width:(totalWidth/30)*10,
+        justifyContent:'center'
     },
     textInputView: {
         // justifyContent:'flex-end',
@@ -161,8 +166,6 @@ let MCV = StyleSheet.create({
     locationSearchField:{
         height: 50,
         width: totalWidth-10,
-        borderTopWidth:1,
-        borderTopColor:'#bdbdbd',
     },
     mapViewStyle: {
         width: totalWidth,

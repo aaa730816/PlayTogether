@@ -8,17 +8,22 @@ import {
     TouchableWithoutFeedback,
     TextInput,
     BackHandler,
-    AsyncStorage
+    AsyncStorage, ScrollView
 } from 'react-native';
 import CommonString from '../../resource/CommonString';
 import CommonHeader from "../common/CommonHeader";
 import UserStyles from './UserSyles';
 import Color from '../../Colors';
+import IconFA from 'react-native-vector-icons/FontAwesome';
+import MCV from "../../MCV";
 
 export default class UserProfile extends Component {
     static navigationOptions = {
         title: CommonString.userProfile,
-        header: (<CommonHeader title={CommonString.userProfile}/>)
+        headerStyle: MCV.headerStyle,
+        headerTintColor: 'white',
+        headerTitleStyle: MCV.headerTitleStyle,
+        header:(<CommonHeader title={CommonString.userProfile}/>)
     }
 
     constructor(props) {
@@ -26,20 +31,26 @@ export default class UserProfile extends Component {
         this.state = {
             modalVisiable: false,
             newNickName: '',
-            nickName: global.nickName
+            nickName: global.nickName,
+            expandActivityPanel: false
         }
+        this.backAndroid=this.onBackAndroid.bind(this)
     }
 
     componentWillMount() {
-        BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid)
+        BackHandler.addEventListener('hardwareBackPress', this.backAndroid)
+    }
+
+    componentWillUnmount() {
+        BackHandler.removeEventListener('hardwareBackPress', this.backAndroid)
     }
 
     onBackAndroid = () => {
         return true;
     }
-
     render() {
         return (
+            <ScrollView>
             <View style={UserStyles.userProfileContainer}>
                 <Modal animationType={'slide'} transparent={true} visible={this.state.modalVisiable}
                        onRequestClose={() => this.setState({modalVisiable: false})}>
@@ -78,12 +89,35 @@ export default class UserProfile extends Component {
                         <Text style={{fontSize: 16}}>{this.state.nickName}</Text>
                     </View>
                 </TouchableWithoutFeedback>
+                <TouchableWithoutFeedback onPress={() => this.setState((previous) => {
+                    previous.expandActivityPanel = previous.expandActivityPanel ? false : true;
+                    return previous;
+                })}>
+                    <View style={UserStyles.userProfileCard}>
+                        <Text style={{fontSize: 16}}>活动</Text>
+                        {this.state.expandActivityPanel ? <IconFA size={16} name={'angle-up'}/> :
+                            <IconFA size={16} name={'angle-down'}/>}
+                    </View>
+                </TouchableWithoutFeedback>
+                <View style={[{display: this.state.expandActivityPanel ? 'flex' : 'none'}]}>
+                    <TouchableOpacity onPress={() => this._goToUserAct('create')}>
+                        <View style={UserStyles.userProfileCard}>
+                            <Text style={{fontSize: 16}}>我发布的活动</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => this._goToUserAct('join')}>
+                        <View style={UserStyles.userProfileCard}>
+                            <Text style={{fontSize: 16}}>我参加的活动</Text>
+                        </View>
+                    </TouchableOpacity>
+                </View>
                 <TouchableOpacity onPress={() => this.logOut()}>
                     <View style={UserStyles.userProfileCard}>
                         <Text style={{color: Color.MaterialRed, fontWeight: 'bold', fontSize: 16}}>注销</Text>
                     </View>
                 </TouchableOpacity>
             </View>
+            </ScrollView>
         );
     }
 
@@ -159,5 +193,11 @@ export default class UserProfile extends Component {
                     )
                 }
             })
+    }
+
+    _goToUserAct = (type) => {
+        this.props.navigation.navigate('UserActivity', {
+            type: type
+        })
     }
 }

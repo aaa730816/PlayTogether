@@ -14,6 +14,10 @@ let CommonString = {
     register:'注册',
     login:'登陆',
     user:'用户',
-    userProfile:'用户资料'
+    userProfile:'用户资料',
+    game:'游戏',
+    createActivities:'发布的活动',
+    joinActivities:'参加的活动',
+    otherGame:'其他游戏'
 }
 export {CommonString as default}

@@ -18,7 +18,8 @@ const sections = [
         isFA: false,
         size:50,
         tabName:CommonString.DateTabName,
-        isLocal: false
+        isLocal: false,
+        type:'basketball'
     }, {
         key: 2,
         title: '足球',
@@ -27,7 +28,8 @@ const sections = [
         isFA: false,
         size:50,
         tabName:CommonString.DateTabName,
-        isLocal: false
+        isLocal: false,
+        type:'football'
     }, {
         key: 3,
         title: '乒乓球',
@@ -37,7 +39,8 @@ const sections = [
         isFA: false,
         size:50,
         tabName:CommonString.DateTabName,
-        isLocal: true
+        isLocal: true,
+        type:'table-tennis'
     }, {
         key: 4,
         title: '网球',
@@ -46,7 +49,8 @@ const sections = [
         isFA: false,
         size:50,
         tabName:CommonString.DateTabName,
-        isLocal: false
+        isLocal: false,
+        type:'tennis'
     }, {
         key: 5,
         title: '棋牌',
@@ -56,7 +60,8 @@ const sections = [
         isFA: false,
         size:50,
         tabName:CommonString.DateTabName,
-        isLocal: true
+        isLocal: true,
+        type:'chess'
     }, {
         key: 6,
         title: '娱乐',
@@ -65,7 +70,8 @@ const sections = [
         isFA: false,
         size:50,
         tabName:CommonString.DateTabName,
-        isLocal: false
+        isLocal: false,
+        type:'recreation'
     }, {
         key: 7,
         title: '电子竞技',
@@ -74,7 +80,8 @@ const sections = [
         isFA: false,
         size:50,
         tabName:CommonString.DateTabName,
-        isLocal: false
+        isLocal: false,
+        type:'game'
     }, {
         key: 8,
         title: '约饭',
@@ -83,7 +90,8 @@ const sections = [
         isFA: false,
         size:50,
         tabName:CommonString.DateTabName,
-        isLocal: false
+        isLocal: false,
+        type:'meal'
     }, {
         key: 9,
         title: '其他',
@@ -92,7 +100,8 @@ const sections = [
         isFA: false,
         size:50,
         tabName:CommonString.DateTabName,
-        isLocal: false
+        isLocal: false,
+        type:'other'
     }
 ]
 export default class MainPage extends Component {

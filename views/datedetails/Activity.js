@@ -8,14 +8,13 @@ import {
     CheckBox,
     DatePickerAndroid,
     TouchableOpacity,
-    Picker, Alert, BackHandler
+    Picker, Alert, DeviceEventEmitter
 } from 'react-native';
 import MCV from '../../MCV';
-import Icon from 'react-native-vector-icons/Ionicons';
-import IconFA from 'react-native-vector-icons/FontAwesome';
 import CommonString from '../../resource/CommonString';
 import DateTimePicker from 'react-native-modal-datetime-picker';
-import cityCode from "../utils/CityCode";
+import moment from 'moment';
+import ConversitionUtil from '../utils/ConversitonUtil';
 
 export default class Activity extends Component {
     constructor(props) {
@@ -46,11 +45,9 @@ export default class Activity extends Component {
             },
             selectedGame: Activity.games[0]
         };
-        this.backAndroid = this.onBackAndroid.bind(this)
     }
 
     componentDidMount() {
-        BackHandler.addEventListener('hardwareBackPress', this.backAndroid)
         this.props.navigation.setParams({submitDate: this._submitDate})
         this.props.navigation.setParams({joinDate: this._joinDate})
         var hourPickerItems = [];
@@ -70,7 +67,7 @@ export default class Activity extends Component {
             }).then(response => response.json())
                 .then(responseJson => {
                     responseJson.numOfPeople = (responseJson.numOfPeople).toString();
-                    responseJson.startTime = new Date(responseJson.startTime);
+                    responseJson.startTime = moment(responseJson.startTime).toDate();
                     let selectedGame = responseJson.game;
                     if (Activity.games.indexOf(responseJson.game) == -1) {
                         selectedGame = Activity.games[Activity.games.length - 1];
@@ -81,15 +78,6 @@ export default class Activity extends Component {
         if (params.operation == 'join') {
             this.setState({editable: false})
         }
-    }
-
-    componentWillUnmount() {
-        BackHandler.removeEventListener('hardwareBackPress', this.backAndroid)
-    }
-
-    onBackAndroid = () => {
-        this.props.navigation.pop();
-        return true;
     }
     static navigationOptions = ({navigation}) => ({
         title: navigation.state.params.item.title,
@@ -102,7 +90,7 @@ export default class Activity extends Component {
                     color: 'white',
                     paddingRight: 20,
                     fontWeight: 'bold'
-                }}>{navigation.state.params.operation == 'join' ? '参加' : '确定'}</Text>
+                }}>{navigation.state.params.operation == 'join' ? '参加' : '保存'}</Text>
             </TouchableOpacity>
         ),
         headerTintColor: 'white',
@@ -176,6 +164,11 @@ export default class Activity extends Component {
             }).then(response => response.json())
                 .then(responseJson => {
                     if (responseJson.success) {
+                        if (responseJson.event) {
+                            let events = [];
+                            events.push(responseJson.event);
+                            ConversitionUtil.saveEvents(events);
+                        }
                         Alert.alert(
                             '',
                             _this.state.dateInfo.id == '' ? '创建活动成功' : '更新活动成功',
@@ -251,6 +244,9 @@ export default class Activity extends Component {
         }).then(response => response.json())
             .then(responseJson => {
                 if (responseJson.success) {
+                    let events = [];
+                    events.push(responseJson.event);
+                    ConversitionUtil.saveEvents(events);
                     Alert.alert(
                         '',
                         '参加活动成功',
@@ -313,13 +309,8 @@ export default class Activity extends Component {
             )
         }
         return (
-            <ScrollView style={{flex: 1}}>
+            <ScrollView>
                 <View style={MCV.dateDetailContainer}>
-                    {/*<View>*/}
-                    {/*{item.isFA ? <IconFA size={item.size} name={item.icon}></IconFA> : (item.isLocal ?*/}
-                    {/*<Image style={[MCV.iconStyle, {marginVertical: 5}]} source={item.source}></Image> :*/}
-                    {/*<Icon size={item.size} name={item.icon}></Icon>)}*/}
-                    {/*</View>*/}
                     <View style={MCV.dateDetailView}>
                         <ScrollView>
                             <View style={MCV.sportInputView}>
@@ -338,8 +329,9 @@ export default class Activity extends Component {
                                 <View
                                     style={MCV.labelStyle}><Text>{CommonString.startTime + CommonString.semicolon}</Text></View>
                                 <View style={MCV.textInputView}>
-                                    <TouchableOpacity onPress={() => this._showDateTimePicker()}>
-                                        <TextInput style={MCV.dateTextStyle} editable={false}
+                                    <TouchableOpacity onPress={() => this._showDateTimePicker()}
+                                                      disabled={!this.state.editable}>
+                                        <TextInput style={MCV.textInputStyle} editable={false}
                                                    underlineColorAndroid='#bdbdbd'
                                                    value={this.state.dateInfo.startTime.toLocaleDateString() + ' ' + this.state.dateInfo.startTime.toLocaleTimeString()}></TextInput>
                                     </TouchableOpacity>
@@ -356,7 +348,7 @@ export default class Activity extends Component {
                                 style={[MCV.sportInputView, {display: this.state.component == 'Game' ? 'none' : 'flex'}]}>
                                 <View
                                     style={MCV.labelStyle}><Text>{CommonString.location + CommonString.semicolon}</Text></View>
-                                <TouchableOpacity onPress={() => this._openGeoSelect()}><View
+                                <TouchableOpacity onPress={() => this._openGeoSelect()} disabled={!this.state.editable}><View
                                     style={MCV.textInputView}><TextInput editable={false} style={MCV.textInputStyle}
                                                                          value={this.state.dateInfo.location.address}
                                                                          underlineColorAndroid='#bdbdbd'></TextInput></View></TouchableOpacity>

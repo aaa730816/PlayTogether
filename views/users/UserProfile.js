@@ -7,8 +7,7 @@ import {
     Modal,
     TouchableWithoutFeedback,
     TextInput,
-    BackHandler,
-    AsyncStorage, ScrollView
+    AsyncStorage, ScrollView, DeviceEventEmitter
 } from 'react-native';
 import CommonString from '../../resource/CommonString';
 import CommonHeader from "../common/CommonHeader";
@@ -32,22 +31,11 @@ export default class UserProfile extends Component {
             modalVisiable: false,
             newNickName: '',
             nickName: global.nickName,
-            expandActivityPanel: false
+            expandActivityPanel: false,
+            expandEquipmentPanel: false,
         }
-        this.backAndroid=this.onBackAndroid.bind(this)
     }
 
-    componentWillMount() {
-        BackHandler.addEventListener('hardwareBackPress', this.backAndroid)
-    }
-
-    componentWillUnmount() {
-        BackHandler.removeEventListener('hardwareBackPress', this.backAndroid)
-    }
-
-    onBackAndroid = () => {
-        return true;
-    }
     render() {
         return (
             <ScrollView>
@@ -111,6 +99,28 @@ export default class UserProfile extends Component {
                         </View>
                     </TouchableOpacity>
                 </View>
+                <TouchableWithoutFeedback onPress={() => this.setState((previous) => {
+                    previous.expandEquipmentPanel = previous.expandEquipmentPanel ? false : true;
+                    return previous;
+                })}>
+                    <View style={UserStyles.userProfileCard}>
+                        <Text style={{fontSize: 16}}>器材</Text>
+                        {this.state.expandEquipmentPanel ? <IconFA size={16} name={'angle-up'}/> :
+                            <IconFA size={16} name={'angle-down'}/>}
+                    </View>
+                </TouchableWithoutFeedback>
+                <View style={[{display: this.state.expandEquipmentPanel ? 'flex' : 'none'}]}>
+                    <TouchableOpacity onPress={() => this._goToUserEquip('create')}>
+                        <View style={UserStyles.userProfileCard}>
+                            <Text style={{fontSize: 16}}>我发布的器材</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => this._goToUserEquip('rent')}>
+                        <View style={UserStyles.userProfileCard}>
+                            <Text style={{fontSize: 16}}>我租借的器材</Text>
+                        </View>
+                    </TouchableOpacity>
+                </View>
                 <TouchableOpacity onPress={() => this.logOut()}>
                     <View style={UserStyles.userProfileCard}>
                         <Text style={{color: Color.MaterialRed, fontWeight: 'bold', fontSize: 16}}>注销</Text>
@@ -142,6 +152,13 @@ export default class UserProfile extends Component {
                 global.userName = '';
                 global.nickName = '';
                 this.props.navigation.navigate('Users')
+                for (let i in global.sockets) {
+                    sockets[i].close();
+                }
+                global.events=[];
+                global.sockets={};
+                DeviceEventEmitter.emit('FreshUnread');
+                AsyncStorage.setItem('events',JSON.stringify({}))
             })
     }
     changeNickName = () => {
@@ -197,6 +214,11 @@ export default class UserProfile extends Component {
 
     _goToUserAct = (type) => {
         this.props.navigation.navigate('UserActivity', {
+            type: type
+        })
+    }
+    _goToUserEquip=(type)=>{
+        this.props.navigation.navigate('UserEquipment', {
             type: type
         })
     }

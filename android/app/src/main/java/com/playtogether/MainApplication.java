@@ -3,9 +3,11 @@ package com.playtogether;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import cn.reactnative.modules.qq.QQPackage;
-import org.lovebing.reactnative.baidumap.BaiduMapPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
+import org.lovebing.reactnative.baidumap.BaiduMapPackage;
+import cn.jpush.reactnativejpush.JPushPackage;
+import com.oblador.vectoricons.VectorIconsPackage;
+import cn.reactnative.modules.qq.QQPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -25,8 +27,9 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new QQPackage(),
             new VectorIconsPackage(),
+            new QQPackage(),
+            new JPushPackage(true, !BuildConfig.DEBUG),
             new BaiduMapPackage(getApplicationContext())
       );
     }

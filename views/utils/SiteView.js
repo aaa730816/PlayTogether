@@ -9,7 +9,8 @@ import {
 } from 'react-native-baidu-map';
 import IconFA from 'react-native-vector-icons/FontAwesome';
 import MCV from '../../MCV';
-import cityCode from '../utils/CityCode';
+import CityMap from './CityMap';
+import CityCodes from './CityCodes';
 
 var Geolocation = require('Geolocation');
 
@@ -95,20 +96,19 @@ export default class SiteView extends Component {
 
     render() {
         let regions = [];
-        for (var k in cityCode){
+        for (var i in CityCodes) {
             regions.push(
-                <Picker.Item label={cityCode[k]} value={k}/>
+                <Picker.Item label={CityMap[CityCodes[i]]} value={CityCodes[i]}/>
             )
         }
-
         return (
-            <View>
+            <View style={{flex: 1}}>
                 <Modal animationType={'slide'} transparent={false} visible={this.state.modalVisiable}
                        onRequestClose={() => this.setState({modalVisiable: false})}>
                     <View style={MCV.locationSearchContainer}>
                         <StatusBar backgroundColor={'white'}/>
                         <View style={MCV.locationSearchTextField}>
-                            <Picker style={[MCV.doLocationSearchBtn,{width:150}]} selectedValue={this.state.region}
+                            <Picker style={[MCV.doLocationSearchBtn, {width: 150}]} selectedValue={this.state.region}
                                     onValueChange={region => this.setState({region: region})}>
                                 {regions}
                             </Picker>

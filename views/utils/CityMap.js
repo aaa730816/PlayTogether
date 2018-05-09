@@ -1,10 +1,7 @@
-var cityCode = {
-    289:
-        "上海市",
-    131:
-        "北京市",
-    257:
-        "广州市",
+var CityMap = {
+    289:"上海市",
+    131:"北京市",
+    257:"广州市",
     33: "嘉峪关市",
     34: "金昌市",
     35: "白银市", 36:
@@ -391,4 +388,4 @@ var cityCode = {
         "高雄市", 9020:
         "苗栗县"
 }
-export {cityCode as default}
+export {CityMap as default}

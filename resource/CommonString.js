@@ -18,6 +18,17 @@ let CommonString = {
     game:'游戏',
     createActivities:'发布的活动',
     joinActivities:'参加的活动',
-    otherGame:'其他游戏'
+    rentEquipment:'租借的器材',
+    createEquipment:'出租的器材',
+    otherGame:'其他游戏',
+    equipmentList:'器材',
+    numOfEquipment:'数量',
+    guarantee:'押金',
+    equipmentType:'器材类型',
+    otherEquipmentType:'其他类型',
+    message:'消息',
+    activityType:'活动项目',
+    activitySummary:'活动概要',
+    equipmentSummary:'器材概要'
 }
 export {CommonString as default}

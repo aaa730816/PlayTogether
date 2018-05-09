@@ -111,7 +111,9 @@ android {
             abiFilters "armeabi-v7a", "x86"
         }
         manifestPlaceholders = [
-            QQ_APPID: "1106693501"
+            QQ_APPID: "1106693501",
+            JPUSH_APPKEY: "2a2ded96475e6c7618c5f5f1",
+            APP_CHANNEL : "developer-default"
         ]
     }
     signingConfigs {
@@ -153,9 +155,11 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-vector-icons')
     compile project(':react-native-qq')
     compile project(':react-native-baidu-map')
-    compile project(':react-native-vector-icons')
+    compile project(':jpush-react-native')
+    compile project(':jcore-react-native')
     compile fileTree(dir: "libs", include: ["*.jar"])
     compile "com.android.support:appcompat-v7:23.0.1"
     compile "com.facebook.react:react-native:+"  // From node_modules

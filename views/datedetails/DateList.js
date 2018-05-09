@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
-import {View, FlatList, Text, TouchableOpacity, Alert} from 'react-native';
+import {View, FlatList, Text, TouchableOpacity, Alert, Picker} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import CommonString from '../../resource/CommonString';
 import MCV from '../../MCV';
+import moment from 'moment';
 
 var Geolocation = require('Geolocation');
 export default class DateList extends Component {
@@ -26,15 +27,16 @@ export default class DateList extends Component {
             refreshing: true,
             data: [],
             totalPages: 0,
-            component:'',
+            component: '',
+            requestType: 'nearest',
             activityCriteria: {
-                geoLocation: {
+                location: {
                     longitude: 121.39903,
                     latitude: 31.32144,
                 },
                 page: 0,
                 size: 10,
-                activityType:''
+                type: ''
             }
         }
     }
@@ -44,17 +46,17 @@ export default class DateList extends Component {
             result => {
                 var location = result.coords;
                 this.setState(previous => {
-                    previous.equipmentCriteria.geoLocation.latitude = location.latitude;
-                    previous.equipmentCriteria.geoLocation.longitude = location.longitude;
+                    previous.activityCriteria.location.latitude = location.latitude;
+                    previous.activityCriteria.location.longitude = location.longitude;
                     return previous;
                 })
             })
         let {params} = this.props.navigation.state;
-        this.setState(previous=>{
-            previous.equipmentCriteria.activityType=this.props.navigation.state.params.item.type;
-            previous.component=params.item.component;
+        this.setState(previous => {
+            previous.activityCriteria.type = this.props.navigation.state.params.item.type;
+            previous.component = params.item.component;
             return previous;
-        },function () {
+        }, function () {
             this._doLoadDatas(this);
         })
         this.props.navigation.setParams({addPress: this.createDate})
@@ -79,20 +81,20 @@ export default class DateList extends Component {
             })
         }
     }
-    openDate=(item)=>{
+    openDate = (item) => {
         let {params} = this.props.navigation.state;
         let operation = 'join';
-        if (!(global.userId==''||global.userId==undefined)) {
-            if (item.creator==global.userId.toString()) {
-                operation=='update';
+        if (!(global.userId == '' || global.userId == undefined)) {
+            if (item.creator == global.userId.toString()) {
+                operation == 'update';
             } else {
-                operation='join';
+                operation = 'join';
             }
         }
         this.props.navigation.navigate('Activity', {
             operation: operation,
             item: params.item,
-            oid:item.id
+            oid: item.id
         })
     }
     onRenderItem = ({item}) => {
@@ -100,10 +102,13 @@ export default class DateList extends Component {
             <TouchableOpacity
                 onPress={() => this.openDate(item)}>
                 <View style={MCV.dateContainer}>
-                    <View style={MCV.dateFirstRow}><Text style={MCV.dateTitle}>{item.title+(item.numOfPeople==0?'(已满)':'')}</Text>{this.state.component!='Game'?<Text
-                        style={MCV.dateDistance}>{item.distance / 1000 + 'km'}</Text>:(<View/>)}</View>
-                    <Text style={MCV.dateTime}>时间:{new Date(item.startTime).toLocaleDateString()+' '+new Date(item.startTime).toLocaleTimeString()}</Text>
-                    {this.state.component=='Game'?<Text style={MCV.dateSite}>游戏:{item.game}</Text>:<Text style={MCV.dateSite}>地点:{item.address}</Text>}
+                    <View style={MCV.dateFirstRow}><Text
+                        style={MCV.dateTitle}>{item.title + (item.numOfPeople == 0 ? '(已满)' : '')}</Text>{this.state.component != 'Game' ?
+                        <Text
+                            style={MCV.dateDistance}>{item.distance / 1000 + 'km'}</Text> : (<View/>)}</View>
+                    <Text style={MCV.dateTime}>时间:{moment(item.startTime).format('YYYY-MM-DD HH:mm:ss')}</Text>
+                    {this.state.component == 'Game' ? <Text style={MCV.dateSite}>游戏:{item.game}</Text> :
+                        <Text style={MCV.dateSite}>地点:{item.address}</Text>}
                 </View>
             </TouchableOpacity>
         )
@@ -114,7 +119,7 @@ export default class DateList extends Component {
     }
     _onRefresh = () => {
         this.setState(previous => {
-            previous.equipmentCriteria.page = 0;
+            previous.activityCriteria.page = 0;
             previous.totalPages = 0;
             previous.data = [];
             previous.refreshing = true;
@@ -122,10 +127,10 @@ export default class DateList extends Component {
         }, () => this._doLoadDatas(this))
     }
     _onEndReach = () => {
-        if (!(this.state.totalPages != 0 && this.state.equipmentCriteria.page == this.state.totalPages - 1)) {
+        if (!(this.state.totalPages != 0 && this.state.activityCriteria.page == this.state.totalPages - 1)) {
             if (this.state.totalPages != 0) {
                 this.setState(previous => {
-                    previous.equipmentCriteria.page += 1;
+                    previous.activityCriteria.page += 1;
                     previous.refreshing = true;
                     return previous;
                 }, () => this._doLoadDatas(this))
@@ -133,13 +138,13 @@ export default class DateList extends Component {
         }
     }
     _doLoadDatas = (_this) => {
-        fetch(global.activityModuleUrl + 'nearest', {
+        fetch(global.activityModuleUrl + 'search/' + _this.state.requestType, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-type': 'application/json'
             },
-            body: JSON.stringify(_this.state.equipmentCriteria)
+            body: JSON.stringify(_this.state.activityCriteria)
         }).then(response => response.json())
             .then(responseJson => {
                 this.setState(previous => {
@@ -155,6 +160,34 @@ export default class DateList extends Component {
     render() {
         return (
             <View style={MCV.dateListContainer}>
+                <View
+                    style={[MCV.equipmentPickerView, {display: this.state.activityCriteria.type == 'game' ? 'none' : 'flex'}]}>
+                    <Picker mode={Picker.MODE_DROPDOWN}
+                            style={MCV.activityPicker}
+                            selectedValue={this.state.requestType}
+                            onValueChange={requestType => {
+                                var _this = this;
+                                this.setState({requestType: requestType}, function () {
+                                    _this._onRefresh();
+                                })
+                            }}>
+                        <Picker.Item label={'距离最近'} value={'nearest'}/>
+                        <Picker.Item label={'附近范围'} value={'around'}/>
+                        <Picker.Item label={'价格最低'} value={'cheapest'}/>
+                        <Picker.Item label={'最新发布'} value={'newest'}/>
+                    </Picker>
+                    <View style={MCV.activityPicker}>
+                        <TouchableOpacity onPress={() => {
+                            let type = this.state.activityCriteria.type;
+                            this.props.navigation.navigate('EventMap', {
+                                event: {
+                                    eventType: 'activity',
+                                    type: type
+                                }
+                            })
+                        }}><Text style={MCV.dateSearchBtn}>地图搜索</Text></TouchableOpacity>
+                    </View>
+                </View>
                 <FlatList ItemSeparatorComponent={this.separator} data={this.state.data} renderItem={this.onRenderItem}
                           onRefresh={() => this._onRefresh()}
                           refreshing={this.state.refreshing}

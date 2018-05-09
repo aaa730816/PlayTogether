@@ -7,14 +7,21 @@ import Activity from './views/datedetails/Activity';
 import SiteView from './views/utils/SiteView';
 import User from './views/users/User';
 import EquipmentList from './views/equipment/EquipmentList';
+import Equipment from './views/equipment/Equipment';
 import MCV from './MCV';
 import './resource/UrlSetting';
+import CommonString from './resource/CommonString';
+import MessageList from './views/message/MessageList';
+import ChatView from "./views/message/ChatView";
+import EventSummary from "./views/message/EventSummary";
+import EventMap from "./views/common/EventMap";
 
 const ActivityStack = StackNavigator({
     Main: {screen: MainPage},
     DateList: {screen: DateList},
     Activity: {screen: Activity},
     SiteView: {screen: SiteView},
+    EventMap:{screen:EventMap}
 }, {
     headerMode: 'float',
     navigationOptions: {
@@ -24,10 +31,27 @@ const ActivityStack = StackNavigator({
     }
 });
 const EquipmentStack = StackNavigator({
-    EquipmentList: {screen:EquipmentList}
+    EquipmentList: {screen: EquipmentList},
+    Equipment: {screen: Equipment},
+    SiteView: {screen: SiteView},
+    EventMap:{screen:EventMap}
 }, {
     headerMode: 'float',
     navigationOptions: {
+        title: CommonString.equipmentList,
+        headerStyle: MCV.headerStyle,
+        headerTintColor: 'white',
+        headerTitleStyle: MCV.headerTitleStyle,
+    }
+});
+const MessageStack = StackNavigator({
+    MessageList: {screen: MessageList},
+    ChatView:{screen:ChatView},
+    EventSummary:{screen:EventSummary}
+}, {
+    headerMode: 'float',
+    navigationOptions: {
+        title: CommonString.message,
         headerStyle: MCV.headerStyle,
         headerTintColor: 'white',
         headerTitleStyle: MCV.headerTitleStyle,
@@ -35,7 +59,8 @@ const EquipmentStack = StackNavigator({
 });
 const PlayTogether = TabNavigator({
     Activity: {screen: ActivityStack},
-    Equipment:{screen:EquipmentStack},
+    Equipment: {screen: EquipmentStack},
+    Message: {screen: MessageStack},
     Users: {screen: User}
 }, {
     tabBarPosition: 'bottom',

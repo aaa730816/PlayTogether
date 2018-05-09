@@ -10,12 +10,14 @@ import UserStyles from './UserSyles';
 import IconFA from 'react-native-vector-icons/FontAwesome';
 import colors from '../../Colors';
 import MCV from "../../MCV";
+import ConversitionUtil from '../utils/ConversitonUtil';
+import { NavigationActions } from 'react-navigation';
 
 export default class Login extends Component {
     static navigationOptions = {
         title: CommonString.login,
         headerStyle: MCV.userHeaderStyle,
-        header:(<UserHeader/>)
+        header: (<UserHeader/>)
     }
 
     constructor(props) {
@@ -35,6 +37,7 @@ export default class Login extends Component {
             this.props.navigation.navigate('UserProfile');
         }
     }
+
     render() {
         return (
             <ScrollView>
@@ -108,30 +111,38 @@ export default class Login extends Component {
                 if (responseJson.success) {
                     AsyncStorage.setItem('user',
                         JSON.stringify({
-                            userId:responseJson.userOid,
-                            userName:responseJson.username,
-                            nickName:responseJson.nickName
+                            userId: responseJson.userOid,
+                            userName: responseJson.username,
+                            nickName: responseJson.nickName
                         }), () => {
-                        global.userId = responseJson.userOid
-                        global.userName = responseJson.username.length > 15 ? responseJson.username.slice(0, 15) + '...' : responseJson.username
-                        global.nickName = responseJson.nickName
-                        Alert.alert(
-                            '',
-                            '登陆成功',
-                            [
-                                {
-                                    text: '确认', onPress: () => this.props.navigation.navigate("UserProfile")
-                                }
-                            ]
-                        )
-                    })
+                            global.userId = responseJson.userOid;
+                            global.userName = responseJson.username.length > 15 ? responseJson.username.slice(0, 15) + '...' : responseJson.username;
+                            global.nickName = responseJson.nickName;
+                            fetch(global.userModuleUrl + 'getUserEvents?userId=' + responseJson.userOid, {
+                                method: 'GET'
+                            }).then(response => response.json())
+                                .then(responseJson => {
+                                    global.events = [];
+                                    global.sockets = {};
+                                    ConversitionUtil.saveEvents(responseJson);
+                                })
+                            Alert.alert(
+                                '',
+                                '登陆成功',
+                                [
+                                    {
+                                        text: '确认', onPress: () => this.props.navigation.navigate('UserProfile')
+                                    }
+                                ]
+                            )
+                        })
                 } else {
                     Alert.alert(
                         '',
                         '用户名或密码错误',
                         [
                             {
-                                text: '确认', style:'cancel'
+                                text: '确认', style: 'cancel'
                             }
                         ]
                     )

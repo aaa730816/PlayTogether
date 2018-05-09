@@ -65,6 +65,7 @@ let UserStyles = StyleSheet.create({
         alignItems:'center',
         marginBottom:10,
         paddingLeft:20,
+        elevation:1,
         paddingRight:20,
         backgroundColor:'white',
         elevation:0.5

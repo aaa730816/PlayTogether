@@ -2,8 +2,8 @@ import React from 'react';
 import {StyleSheet, Dimensions,StatusBar} from 'react-native';
 import colors from './Colors';
 
-let totalHeight = Dimensions.get('screen').height;
-let totalWidth = Dimensions.get('screen').width;
+let totalHeight = Dimensions.get('window').height;
+let totalWidth = Dimensions.get('window').width;
 let statusBarHeight = StatusBar.currentHeight;
 let MCV = StyleSheet.create({
     headerStyle: {
@@ -119,7 +119,7 @@ let MCV = StyleSheet.create({
         paddingHorizontal: 20,
         paddingVertical: 10,
         width: totalWidth - 40,
-        height: totalHeight - 50 - (totalHeight * 2) / 13 - 50,
+        height: totalHeight - 50 - (totalHeight * 2) / 13 - 35,
         elevation: 25,
         backgroundColor: 'white',
         alignItems: 'flex-end'

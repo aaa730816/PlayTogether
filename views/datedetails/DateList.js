@@ -42,23 +42,20 @@ export default class DateList extends Component {
     }
 
     componentDidMount() {
+        let {params} = this.props.navigation.state;
         Geolocation.getCurrentPosition(
             result => {
                 var location = result.coords;
                 this.setState(previous => {
                     previous.activityCriteria.location.latitude = location.latitude;
                     previous.activityCriteria.location.longitude = location.longitude;
+                    previous.activityCriteria.type = this.props.navigation.state.params.item.type;
+                    previous.component = params.item.component;
                     return previous;
+                }, function () {
+                    this._doLoadDatas(this);
                 })
             })
-        let {params} = this.props.navigation.state;
-        this.setState(previous => {
-            previous.activityCriteria.type = this.props.navigation.state.params.item.type;
-            previous.component = params.item.component;
-            return previous;
-        }, function () {
-            this._doLoadDatas(this);
-        })
         this.props.navigation.setParams({addPress: this.createDate})
     }
 

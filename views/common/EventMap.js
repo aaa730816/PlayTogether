@@ -321,7 +321,6 @@ export default class EventMap extends Component {
                 this.currentIndex=index;
             }
         }
-
     }
     _onPressLocationItem = (item) => {
         this._setMarkAndLocation(item.location.lng, item.location.lat, item.address, item.name);

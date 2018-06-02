@@ -16,6 +16,7 @@ import IconFA from 'react-native-vector-icons/FontAwesome';
 import colors from '../../Colors';
 import UserHeader from './UserHeader';
 import MCV from "../../MCV";
+import JPushUtils from '../utils/JPushUtils';
 
 export default class Resgister extends Component {
     static navigationOptions = {
@@ -110,9 +111,10 @@ export default class Resgister extends Component {
                                 userName: responseJson.username,
                                 nickName: responseJson.nickName
                             }, () => {
-                                global.userId = responseJson.userOid
-                                global.userName = responseJson.username.length > 15 ? responseJson.username.slice(0, 15) + '...' : responseJson.username
-                                global.nickName = responseJson.nickName
+                                global.userId = responseJson.userOid;
+                                global.userName = responseJson.username.length > 15 ? responseJson.username.slice(0, 15) + '...' : responseJson.username;
+                                global.nickName = responseJson.nickName;
+                                JPushUtils.setAlias();
                                 Alert.alert(
                                     '',
                                     '注册成功',

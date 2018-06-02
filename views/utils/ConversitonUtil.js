@@ -8,7 +8,7 @@ var eventType = {
 export default class ConversitonUtil {
     static openWsServer = (events) => {
         for (let i in events) {
-            var socket = new WebSocket((events[i].type == 'activity' ? global.activityWsServer : global.equipmentWsServer) + events[i].id+'/'+global.deviceId);
+            var socket = new WebSocket((events[i].type == 'activity' ? global.activityWsServer : global.equipmentWsServer) + events[i].id+'/'+global.userId);
             socket.onmessage = function (evt) {
                 let msg = JSON.parse(evt.data);
                 ConversitonUtil._incrementUnread(events[i].id, events[i].type);

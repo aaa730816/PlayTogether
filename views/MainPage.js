@@ -1,6 +1,17 @@
 import React, {Component} from 'react';
 import {
-    View, Text, Image, StyleSheet, StatusBar, TouchableOpacity, ScrollView, AsyncStorage,DeviceEventEmitter,Platform,BackHandler,ToastAndroid
+    View,
+    Text,
+    Image,
+    StyleSheet,
+    StatusBar,
+    TouchableOpacity,
+    ScrollView,
+    AsyncStorage,
+    DeviceEventEmitter,
+    Platform,
+    BackHandler,
+    ToastAndroid
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import IconFA from 'react-native-vector-icons/FontAwesome';
@@ -10,6 +21,7 @@ import CommonString from '../resource/CommonString';
 import ConversitionUtil from './utils/ConversitonUtil';
 import ChatView from "./message/ChatView";
 import JPushModule from "jpush-react-native";
+import JPushUtils from './utils/JPushUtils';
 
 var pingPongIcon = require('../images/pingpong.png');
 var chessIcon = require('../images/chess.png');
@@ -114,42 +126,22 @@ export default class MainPage extends Component {
     didBlurListener;
     static navigationOptions = {
         title: CommonString.MainPage,
-        // headerStyle: MCV.headerStyle,
-        // headerTintColor: 'white',
-        // headerTitleStyle: MCV.headerTitleStyle,
         tabBarLabel: CommonString.DateTabName
     }
 
     constructor(props) {
         super(props);
-        this.state={
-            appkey: 'AppKey',
-            imei: 'IMEI',
-            package: 'PackageName',
-            deviceId: 'DeviceId',
-            version: 'Version',
-            pushMsg: 'PushMessage',
-            registrationId: 'registrationId',
-            tag: '',
-            alias: 'Tony'
-        }
     }
 
     componentDidMount() {
         var _this = this;
         console.log('main componentDidMount')
-        this.didFocusListener=this.props.navigation.addListener('didFocus',payload=>{
-            BackHandler.addEventListener('hardwareBackPress',_this.handleBack)
+        this.didFocusListener = this.props.navigation.addListener('didFocus', payload => {
+            BackHandler.addEventListener('hardwareBackPress', _this.handleBack)
         })
-        this.didBlurListener=this.props.navigation.addListener('didBlur',payload=>{
-            BackHandler.removeEventListener('hardwareBackPress',_this.handleBack)
+        this.didBlurListener = this.props.navigation.addListener('didBlur', payload => {
+            BackHandler.removeEventListener('hardwareBackPress', _this.handleBack)
         })
-        JPushModule.initPush(this);
-        JPushModule.notifyJSDidLoad(resultCode => {
-            if (resultCode === 0) {
-            }
-        })
-        // NotificationsAndroid.setNotificationOpenedListener(this._boundOnNotificationOpened)
         AsyncStorage.getItem('user').then(value => {
             if (value != '' && value != undefined) {
                 var user = JSON.parse(value);
@@ -157,6 +149,24 @@ export default class MainPage extends Component {
                 global.userName = user.userName.length > 15 ? user.userName.slice(0, 15) + '...' : user.userName
                 global.nickName = user.nickName
             }
+            if (Platform.OS === 'android') {
+                JPushModule.initPush()
+                JPushModule.notifyJSDidLoad(resultCode => {
+                    if (resultCode === 0) {
+                    }
+                })
+            } else {
+                JPushModule.setupPush()
+            }
+            JPushModule.addReceiveOpenNotificationListener(map => {
+                console.log('Opening notification!')
+                console.log('map.extra: ' + map.extras)
+                let event = JSON.parse(map.extras);
+                this.props.navigation.navigate('ChatView', {
+                    event: event
+                });
+            })
+            JPushUtils.setAlias();
             global.sockets = {};
             global.events = [];
             AsyncStorage.getItem('events').then(events => {
@@ -167,47 +177,9 @@ export default class MainPage extends Component {
                 }
             })
         })
-        if (Platform.OS === 'android') {
-            JPushModule.initPush()
-            JPushModule.getInfo(map => {
-                global.deviceId=(map.myDeviceId).split(':')[1].toString().trim();
-                this.setState({
-                    appkey: map.myAppKey,
-                    imei: map.myImei,
-                    package: map.myPackageName,
-                    deviceId: map.myDeviceId,
-                    version: map.myVersion,
-                    alias:global.deviceId
-                },function () {
-                    console.log('appKey:' + _this.state.appkey + ' imei:' + _this.state.imei + ' deviceId:' + _this.state.deviceId + ' version:' + _this.state.version);
-                })
-            })
-            JPushModule.notifyJSDidLoad(resultCode => {
-                if (resultCode === 0) {
-                }
-            })
-        } else {
-            JPushModule.setupPush()
-        }
-        JPushModule.addReceiveOpenNotificationListener(map => {
-            console.log('Opening notification!')
-            console.log('map.extra: ' + map.extras)
-            let event = JSON.parse(map.extras);
-            console.log(this.props.navigation)
-            this.props.navigation.navigate('ChatView',{
-                event:event
-            });
-            // JPushModule.jumpToPushActivity("SecondActivity");
-        })
 
-        JPushModule.setAlias(global.deviceId, map => {
-            if (map.errorCode === 0) {
-                console.log('set alias succeed '+global.deviceId)
-            } else {
-                console.log('set alias failed, errorCode: ' + map.errorCode)
-            }
-        })
     }
+
     componentWillUnmount() {
         for (let i in global.sockets) {
             sockets[i].close();
@@ -216,19 +188,13 @@ export default class MainPage extends Component {
         this.didFocusListener.remove();
         console.log('main componentWillUnmount')
         console.log('Deleting alias')
-        JPushModule.deleteAlias(map => {
-            if (map.errorCode === 0) {
-                console.log('delete alias succeed')
-            } else {
-                console.log('delete alias failed, errorCode: ' + map.errorCode)
-            }
-        })
+        JPushUtils.removeAlias();
         JPushModule.removeReceiveOpenNotificationListener(openNotificationEvent)
         console.log('Will clear all notifications')
         JPushModule.clearAllNotifications()
-        // NotificationsAndroid.remove
     }
-    handleBack=()=>{
+
+    handleBack = () => {
         if (this.lastBackPressed && this.lastBackPressed + 2000 >= Date.now()) {
             //最近2秒内按过back键，可以退出应用。
             return false;
@@ -237,6 +203,7 @@ export default class MainPage extends Component {
         ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
         return true;
     }
+
     render() {
         let boxs = sections.map((item, index) => {
             return (

@@ -11,7 +11,8 @@ import IconFA from 'react-native-vector-icons/FontAwesome';
 import colors from '../../Colors';
 import MCV from "../../MCV";
 import ConversitionUtil from '../utils/ConversitonUtil';
-import { NavigationActions } from 'react-navigation';
+import JPushUtils from '../utils/JPushUtils';
+import {NavigationActions} from 'react-navigation';
 
 export default class Login extends Component {
     static navigationOptions = {
@@ -118,6 +119,7 @@ export default class Login extends Component {
                             global.userId = responseJson.userOid;
                             global.userName = responseJson.username.length > 15 ? responseJson.username.slice(0, 15) + '...' : responseJson.username;
                             global.nickName = responseJson.nickName;
+                            JPushUtils.setAlias();
                             fetch(global.userModuleUrl + 'getUserEvents?userId=' + responseJson.userOid, {
                                 method: 'GET'
                             }).then(response => response.json())

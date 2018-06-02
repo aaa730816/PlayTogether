@@ -41,7 +41,7 @@ export default class Activity extends Component {
                 type: this.props.navigation.state.params.item.type,
                 participant: [],
                 creator: '',
-                game: ''
+                game: Activity.games[0]
             },
             selectedGame: Activity.games[0]
         };

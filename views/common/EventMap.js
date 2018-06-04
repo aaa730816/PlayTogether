@@ -217,14 +217,13 @@ export default class EventMap extends Component {
     }
 
     _baiduMapGeoSearch(longitude, latitude) {
-        fetch(global.baiduGeoLocationSearchUrl + '&location=' + latitude + ',' + longitude, {
+        fetch(global.baiduGeoLocationSearchUrl + '?latitude=' + latitude + '&longitude=' + longitude, {
             method: 'GET'
         })
-            .then((response) => response._bodyText)
+            .then((response) => response.json())
             .then((responseJson) => {
-                var returnVal = JSON.parse(responseJson);
-                if (returnVal.status == 0) {
-                    var result = returnVal.result;
+                if (responseJson.status == 0) {
+                    var result = responseJson.result;
                     this.setState({region: result.cityCode})
                     this._setMarkAndLocation(result.location.lng, result.location.lat, result.formatted_address, result.sematic_description);
                 }
@@ -252,10 +251,10 @@ export default class EventMap extends Component {
     }
     _searchLocation = () => {
         if (this.state.query != '') {
-            fetch(global.baiduPlaceSearchUrl + '&query=' + this.state.query + '&region=' + this.state.region)
-                .then((response) => response._bodyText)
+            fetch(global.baiduPlaceSearchUrl + '?query=' + this.state.query + '&region=' + this.state.region)
+                .then((response) => response.json())
                 .then((responseJson) => {
-                    var results = JSON.parse(responseJson).results;
+                    var results = responseJson.results;
                     this.setState({data: results});
                 })
         }

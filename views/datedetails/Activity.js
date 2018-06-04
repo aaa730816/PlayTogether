@@ -34,9 +34,9 @@ export default class Activity extends Component {
                     name: ''
                 },
                 id: '',
-                cost: '',
+                cost: '0',
                 needBringEquipment: false,
-                numOfPeople: '',
+                numOfPeople: '0',
                 description: '',
                 type: this.props.navigation.state.params.item.type,
                 participant: [],
@@ -68,6 +68,7 @@ export default class Activity extends Component {
                 .then(responseJson => {
                     responseJson.numOfPeople = (responseJson.numOfPeople).toString();
                     responseJson.startTime = moment(responseJson.startTime).toDate();
+                    responseJson.cost = (responseJson.cost).toString();
                     let selectedGame = responseJson.game;
                     if (Activity.games.indexOf(responseJson.game) == -1) {
                         selectedGame = Activity.games[Activity.games.length - 1];
@@ -120,7 +121,7 @@ export default class Activity extends Component {
                 ]
             )
         }
-        else if (this.state.dateInfo.numOfPeople == '') {
+        else if (this.state.dateInfo.numOfPeople == '0') {
             Alert.alert(
                 '',
                 '必须填写人数',
@@ -295,6 +296,7 @@ export default class Activity extends Component {
         })
     }
     _chkPrice = (obj) => {
+        obj=(obj==''||obj==undefined)?'0':obj;
         obj = obj.replace(/[^\d]/g, "");
         return obj;
     }

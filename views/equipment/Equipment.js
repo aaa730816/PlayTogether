@@ -35,8 +35,9 @@ export default class Equipment extends Component {
                     name: ''
                 },
                 id: '',
-                cost: '',
-                num: '',
+                cost: '0',
+                guarantee:'0',
+                num: '0',
                 description: '',
                 type: 'basketball',
                 otherType: '',
@@ -181,7 +182,7 @@ export default class Equipment extends Component {
             )
             return false;
         }
-        else if (this.state.equipmentInfo.num == '') {
+        else if (this.state.equipmentInfo.num == '0') {
             Alert.alert(
                 '',
                 '必须填写数量',
@@ -215,28 +216,6 @@ export default class Equipment extends Component {
                 ]
             )
             return false;
-        } else if (this.state.equipmentInfo.cost == '') {
-            Alert.alert(
-                '',
-                '请填写费用',
-                [
-                    {
-                        text: '确认', type: 'cancel'
-                    }
-                ]
-            )
-            return false;
-        } else if (this.state.equipmentInfo.guarantee == '') {
-            Alert.alert(
-                '',
-                '请填写押金',
-                [
-                    {
-                        text: '确认', type: 'cancel'
-                    }
-                ]
-            )
-            return false;
         } else {
             return true;
         }
@@ -255,6 +234,7 @@ export default class Equipment extends Component {
         })
     }
     _chkPrice = (obj) => {
+        obj=(obj==''||obj==undefined)?'0':obj;
         obj = obj.replace(/[^\d]/g, "");
         return obj;
     }
